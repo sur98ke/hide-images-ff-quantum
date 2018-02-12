@@ -1,0 +1,28 @@
+{
+  "description": "Blocks all images on webpage",
+  "manifest_version": 2,
+  "name": "block-images",
+  "version": "1.0",
+  
+  
+  "icons": {
+    "48": "icons/block-48.png"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "icons/block-disabled-48.png",
+    "default_title": "Block images",
+    "browser_style": true
+  },
+  
+  "permissions": [
+    "activeTab",
+    "tabs",
+	"<all_urls>"
+  ]
+
+}
