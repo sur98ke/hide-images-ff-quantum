@@ -6,16 +6,15 @@ var current = TITLE_APPLY;
 function toggleCSS(tab) {
   function gotTitle(title) {
     if (current === TITLE_APPLY) {
-      browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
-	  current = TITLE_REMOVE;
-      browser.browserAction.setTitle({tabId: tab.id, title: current});
-      browser.tabs.insertCSS({code: CSS, runAt: "document_start"});
-    } else {
+      current = TITLE_REMOVE;
       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
-	  current = TITLE_APPLY;
-      browser.browserAction.setTitle({tabId: tab.id, title: current});
       browser.tabs.removeCSS({code: CSS});
+    } else {
+      current = TITLE_APPLY;
+      browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
+      browser.tabs.insertCSS({code: CSS, runAt: "document_start"});
     }
+    browser.browserAction.setTitle({tabId: tab.id, title: current});
   }
 
   var gettingTitle = browser.browserAction.getTitle({tabId: tab.id});
@@ -36,11 +35,11 @@ function loadAllTabs() {
 
 function addTab(tab) {
      if (current === TITLE_APPLY) {
-	   browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
-       browser.tabs.removeCSS({code: CSS});
-    } else {
-	   browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
+       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
        browser.tabs.insertCSS({code: CSS, runAt: "document_start"});
+    } else {
+       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
+       browser.tabs.removeCSS({code: CSS});
     }
    browser.browserAction.setTitle({tabId: tab.id, title: current});
 }
