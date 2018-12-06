@@ -1,4 +1,4 @@
-const CSS = "img{visibility: hidden;}";
+const CSS = "img{visibility: hidden !important;} *{background-image: none !important;}";
 const TITLE_APPLY = "Block images";
 const TITLE_REMOVE = "Show images";
 var current = TITLE_APPLY;
@@ -8,11 +8,11 @@ function toggleCSS(tab) {
     if (current === TITLE_APPLY) {
       current = TITLE_REMOVE;
       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
-      browser.tabs.removeCSS({code: CSS});
+      browser.tabs.removeCSS({allFrames: true, code: CSS});
     } else {
       current = TITLE_APPLY;
       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
-      browser.tabs.insertCSS({code: CSS, runAt: "document_start"});
+      browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
     }
     browser.browserAction.setTitle({tabId: tab.id, title: current});
   }
@@ -36,10 +36,10 @@ function loadAllTabs() {
 function addTab(tab) {
      if (current === TITLE_APPLY) {
        browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
-       browser.tabs.insertCSS({code: CSS, runAt: "document_start"});
+       browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
     } else {
        browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
-       browser.tabs.removeCSS({code: CSS});
+       browser.tabs.removeCSS({allFrames: true, code: CSS});
     }
    browser.browserAction.setTitle({tabId: tab.id, title: current});
 }
