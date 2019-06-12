@@ -1,8 +1,8 @@
 {
-  "description": "Blocks all images on webpage",
+  "description": "Hides all images on webpage",
   "manifest_version": 2,
-  "name": "block-images",
-  "version": "1.2",
+  "name": "hide-images",
+  "version": "1.3",
   
   
   "icons": {
@@ -15,7 +15,7 @@
 
   "browser_action": {
     "default_icon": "icons/block-disabled-48.png",
-    "default_title": "Block images",
+    "default_title": "Images are NOT hidden (Click to hide)",
     "browser_style": true
   },
   

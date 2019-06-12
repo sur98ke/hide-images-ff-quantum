@@ -1,27 +1,28 @@
 const CSS = "img{visibility: hidden !important;} *{background-image: none !important;}";
-const TITLE_APPLY = "Block images";
-const TITLE_REMOVE = "Show images";
-var current = TITLE_APPLY;
+const TITLE_ON = "Images are hidden (Click to unhide)";
+const TITLE_OFF = "Images are NOT hidden (Click to hide)";
+const ICON_ON = "icons/block-48.png";
+const ICON_OFF = "icons/block-disabled-48.png";
 
-function toggleCSS(tab) {
-  function gotTitle(title) {
-    if (current === TITLE_APPLY) {
-      current = TITLE_REMOVE;
-      browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
+const ON = 1;
+const OFF = 0;
+var current = OFF;
+
+function toggle_ON_OFF(tab) {
+    if (current === ON) {
+      current = OFF;
       browser.tabs.removeCSS({allFrames: true, code: CSS});
+      browser.browserAction.setIcon({tabId: tab.id, path: ICON_OFF});
+      browser.browserAction.setTitle({tabId: tab.id, title: TITLE_OFF});
     } else {
-      current = TITLE_APPLY;
-      browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
+      current = ON;
       browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
+      browser.browserAction.setIcon({tabId: tab.id, path: ICON_ON});
+      browser.browserAction.setTitle({tabId: tab.id, title: TITLE_ON});
     }
-    browser.browserAction.setTitle({tabId: tab.id, title: current});
-  }
-
-  var gettingTitle = browser.browserAction.getTitle({tabId: tab.id});
-  gettingTitle.then(gotTitle);
 }
 
-browser.browserAction.onClicked.addListener(toggleCSS);
+browser.browserAction.onClicked.addListener(toggle_ON_OFF);
 
 browser.tabs.onUpdated.addListener(loadAllTabs);
 
@@ -34,12 +35,13 @@ function loadAllTabs() {
 }
 
 function addTab(tab) {
-     if (current === TITLE_APPLY) {
-       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-48.png"});
-       browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
+    if (current === ON) {
+        browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
+        browser.browserAction.setIcon({tabId: tab.id, path: ICON_ON});
+        browser.browserAction.setTitle({tabId: tab.id, title: TITLE_ON});
     } else {
-       browser.browserAction.setIcon({tabId: tab.id, path: "icons/block-disabled-48.png"});
-       browser.tabs.removeCSS({allFrames: true, code: CSS});
+        browser.browserAction.setIcon({tabId: tab.id, path: ICON_OFF});
+        browser.tabs.removeCSS({allFrames: true, code: CSS});
+        browser.browserAction.setTitle({tabId: tab.id, title: TITLE_OFF});
     }
-   browser.browserAction.setTitle({tabId: tab.id, title: current});
 }
