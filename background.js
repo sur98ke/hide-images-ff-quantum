@@ -1,4 +1,4 @@
-const CSS = "img{visibility: hidden !important;} *{background-image: none !important;}";
+const CSS = "img,svg{visibility: hidden !important;} *{background-image: none !important;}";
 const TITLE_ON = "Images are hidden (Click to unhide)";
 const TITLE_OFF = "Images are NOT hidden (Click to hide)";
 const ICON_ON = "icons/block-48.png";
