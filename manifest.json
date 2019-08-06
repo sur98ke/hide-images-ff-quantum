@@ -2,7 +2,7 @@
   "description": "Hides all images on webpage",
   "manifest_version": 2,
   "name": "hide-images",
-  "version": "1.3",
+  "version": "1.4",
   
   
   "icons": {
