@@ -8,40 +8,48 @@ const ON = 1;
 const OFF = 0;
 var current = OFF;
 
-function toggle_ON_OFF(tab) {
-    if (current === ON) {
-      current = OFF;
-      browser.tabs.removeCSS({allFrames: true, code: CSS});
-      browser.browserAction.setIcon({tabId: tab.id, path: ICON_OFF});
-      browser.browserAction.setTitle({tabId: tab.id, title: TITLE_OFF});
-    } else {
-      current = ON;
-      browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
-      browser.browserAction.setIcon({tabId: tab.id, path: ICON_ON});
-      browser.browserAction.setTitle({tabId: tab.id, title: TITLE_ON});
+function insert(tabId) {
+    browser.tabs.insertCSS(tabId, 
+        {allFrames: true, code: CSS, runAt: "document_start"});
+}
+
+function remove(tabId) {
+    browser.tabs.removeCSS(tabId, 
+        {allFrames: true, code: CSS});
+}
+
+function tabUpdated(tabId, changeInfo, tab) {
+    if ( (! tab.discarded) && (! tab.hidden) ) {
+        insert(tab.id)
     }
 }
 
-browser.browserAction.onClicked.addListener(toggle_ON_OFF);
-
-browser.tabs.onUpdated.addListener(loadAllTabs);
-
-function loadAllTabs() {
-    browser.tabs.query({}).then((tabs) => {
+function toggle_ON_OFF() {
+    if (current === ON) {
+        current = OFF;
+        browser.tabs.onUpdated.removeListener(tabUpdated);
+        browser.browserAction.setIcon({path: ICON_OFF});
+        browser.browserAction.setTitle({title: TITLE_OFF});
+    } else {
+        current = ON;
+        browser.tabs.onUpdated.addListener(tabUpdated);
+        browser.browserAction.setIcon({path: ICON_ON});
+        browser.browserAction.setTitle({title: TITLE_ON});
+    }
+    browser.tabs.query({discarded: false}).then((tabs) => {
         for (let tab of tabs) {
-            addTab(tab);
+            if (current === ON) {
+                insert(tab.id);
+            } else {
+                remove(tab.id);
+            }
         }
     });
 }
 
-function addTab(tab) {
-    if (current === ON) {
-        browser.tabs.insertCSS({allFrames: true, code: CSS, runAt: "document_start"});
-        browser.browserAction.setIcon({tabId: tab.id, path: ICON_ON});
-        browser.browserAction.setTitle({tabId: tab.id, title: TITLE_ON});
-    } else {
-        browser.browserAction.setIcon({tabId: tab.id, path: ICON_OFF});
-        browser.tabs.removeCSS({allFrames: true, code: CSS});
-        browser.browserAction.setTitle({tabId: tab.id, title: TITLE_OFF});
-    }
+if (current === ON){
+    browser.tabs.onUpdated.addListener(tabUpdated);
 }
+
+browser.browserAction.onClicked.addListener(toggle_ON_OFF);
+
