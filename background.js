@@ -1,4 +1,4 @@
-const CSS = "img,svg{visibility: hidden !important;} *{background-image: none !important; background-color: hsla(0,0,50,0.3)}";
+const CSS = "img,svg{visibility: hidden !important;} img{background-color: hsla(0,0,50,0.3)} *{background-image: none !important}";
 const TITLE_ON = "Images are hidden (Click to unhide)";
 const TITLE_OFF = "Images are NOT hidden (Click to hide)";
 const ICON_ON = "icons/block-48.png";
